@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 
-function Table({ occurance }) {
-  const [value, setValue] = useState(0);
-
+function Table({ data, occurance }) {
+  
   return (
-    <div>Table</div>
+    <div className='grid'>
+      <div>
+        {data.net_income}
+      </div>
+    </div>
   )
 }
 

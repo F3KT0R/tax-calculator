@@ -17,12 +17,32 @@ function Form({ sendToParent }) {
     } else if(!pattern.test(value)) {
       alert('The value you have entered is not a number.\nPlease enter a valid number.');
     } else {
-      sendToParent({
-        amout: value,
-        type: incomeType,
-        occurance: occurance
-      })
+      calculate();
       handleToogle();
+    }
+  }
+
+  const calculate = () => {
+    const gross_multiplier = 0.2;
+    const net_divider = 0.2;
+    const net_tax_divider = 4;
+
+    if(incomeType === 'gross') {
+        sendToParent({
+          type: incomeType,
+          occurance: occurance,
+          gross_income: value,
+          net_income: value - (value * gross_multiplier),
+          tax: value * gross_multiplier
+        })
+    } else {
+      sendToParent({
+        type: incomeType,
+        occurance: occurance,
+        gross_income: value / net_divider,
+        net_income: value,
+        tax: value / net_tax_divider
+      })
     }
   }
 
@@ -51,7 +71,7 @@ function Form({ sendToParent }) {
         <div className='grid grid-rows-2 px-10 py-10 gap-8'>
           <label>What is your total income?</label>
           <div className='grid grid-cols-10'>
-            <img src={dollar_logo} className='h-10 p-2' />
+            <img src={dollar_logo} className='h-10 p-2 invert' />
             <input type="text" 
                   name="value" 
                   placeholder='10,000' 
