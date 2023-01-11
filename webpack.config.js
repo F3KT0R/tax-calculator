@@ -9,7 +9,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './public/index.html'
+            template: './src/index.html'
         })
     ],
     module: {
@@ -36,7 +36,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(gif|png|jpe?g)$/,
+                test: /\.(gif|png|jpe?g|svg)$/,
                 use: [
                   {
                     loader: 'file-loader',
