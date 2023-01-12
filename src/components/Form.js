@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
 import dollar_logo from '../assets/images/dollar_logo.svg';
 import { ResetContext } from './Main';
-import { data } from '../data/data';
+import { occurance_json, salary_type } from '../data/data';
 
 function Form({ sendToParent }) {
-  const [occurance, setOccurance] = useState('weekly');
+  const [newOccurance, setNewOccurance] = useState('weekly');
   const [incomeType, setIncomeType] = useState('gross');
   const [value, setValue] = useState(0);
   const { handleToogle } = useContext(ResetContext);
@@ -24,13 +24,13 @@ function Form({ sendToParent }) {
 
   const calculate = () => {
     const gross_multiplier = 0.2;
-    const net_divider = 0.2;
+    const net_divider = 0.8;
     const net_tax_divider = 4;
 
     if(incomeType === 'gross') {
         sendToParent({
           type: incomeType,
-          occurance: occurance,
+          occurance: newOccurance,
           gross_income: value,
           net_income: value - (value * gross_multiplier),
           tax: value * gross_multiplier
@@ -38,7 +38,7 @@ function Form({ sendToParent }) {
     } else {
       sendToParent({
         type: incomeType,
-        occurance: occurance,
+        occurance: newOccurance,
         gross_income: value / net_divider,
         net_income: value,
         tax: value / net_tax_divider
@@ -55,13 +55,15 @@ function Form({ sendToParent }) {
       <div className='flex flex-col text-center'>
         <button onClick={handleSubmit} disabled={value !== 0 ? false : true} className='py-7 px-12 hover:bg-classy-green shadow-lg'>Submit</button>
         <div className='grid grid-row shadow-xl'>
-            {data.map(({occurance}) => {
+            {occurance_json.map(({occurance}) => {
               return (
-                <button key={occurance} onClick={(value) => setOccurance(value.target.innerText.toLowerCase())} 
+                <button key={occurance} onClick={(value) => setNewOccurance(value.target.innerText.toLowerCase())} 
                     value={occurance} 
-                    className='py-7 border-b-2 border-classy-dark cursor-pointer hover:bg-classy-green focus:bg-classy-green active:underline underline-offset-8 decoration-white'
+                    className={occurance === newOccurance ?
+                    'py-7 border-b-2 border-classy-dark cursor-pointer  bg-classy-green underline underline-offset-8 decoration-white ease-linear duration-400 transition-all' :
+                    'py-7 border-b-2 border-classy-dark cursor-pointer hover:bg-classy-green ease-linear duration-400 transition-all'}
                 >
-                  {occurance.charAt(0).toUpperCase() + occurance.slice(1)}
+                  {`${occurance.charAt(0).toUpperCase()}${occurance.slice(1)}`}
                 </button>
               )
             })}
@@ -74,15 +76,25 @@ function Form({ sendToParent }) {
             <img src={dollar_logo} className='h-10 p-2 invert' />
             <input type="text" 
                   name="value" 
-                  placeholder='10,000' 
+                  placeholder='10000' 
                   className='text-classy-dark col-span-9 py-2 px-4 h-10 shadow-lg' 
                   onChange={handleChange}>
             </input>
           </div>
         </div>
         <div className='grid grid-cols-2'>
-          <button onClick={() => setIncomeType('gross')} className='hover:bg-classy-green shadow-xl focus:bg-classy-green'>Gross Income</button>
-          <button onClick={() => setIncomeType('net')} className='hover:bg-classy-green shadow-xl focus:bg-classy-green'>Net Income</button>
+          {salary_type.map(({type}) => {
+            return (
+              <button key={type}
+                onClick={() => setIncomeType(type)} 
+                className={type === incomeType ? 
+                  'bg-classy-green shadow-xl underline underline-offset-8 decoration-white ease-linear duration-400 transition-all' : 
+                  'hover:bg-classy-green shadow-xl ease-linear duration-400 transition-all'}
+              >
+                {`${type.charAt(0).toUpperCase()}${type.slice(1)} Income`}
+              </button>
+            )
+          })}
         </div>
       </div>
     </div>

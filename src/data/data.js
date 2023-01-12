@@ -1,4 +1,4 @@
-export const data = [
+export const occurance_json = [
     {
         "occurance": "weekly"
     },
@@ -10,5 +10,14 @@ export const data = [
     },
     {
         "occurance": "anually"
+    }
+];
+
+export const salary_type = [
+    {
+        "type": "gross"
+    },
+    {
+        "type": "net"
     }
 ]
