@@ -10,11 +10,9 @@ function Form({ sendToParent }) {
   const { handleToogle } = useContext(ResetContext);
 
   const handleSubmit = () => {
-    let pattern = /^\d+\.?\d*$/;
-    
-    if(value === 0) {
+   if(value === 0) {
       alert('Your income cannot be $0!\nPlease add a valid amount.');
-    } else if(!pattern.test(value)) {
+    } else if(isNaN(value)) {
       alert('The value you have entered is not a number.\nPlease enter a valid number.');
     } else {
       calculate();
@@ -47,7 +45,7 @@ function Form({ sendToParent }) {
   }
 
   const handleChange = (event) => {
-    event.target.value.length !== 0 ? setValue(event.target.value.replace(/\s+/g, ' ').trim()) : setValue(0)
+    event.target.value.length !== 0 ? setValue(parseInt(event.target.value.replace(',', '').replace(' ', ''))) : setValue(0)
   }
 
   return (
@@ -76,7 +74,7 @@ function Form({ sendToParent }) {
             <img src={dollar_logo} className='h-10 p-2 invert' />
             <input type="text" 
                   name="value" 
-                  placeholder='10000' 
+                  placeholder='10,000' 
                   className='text-classy-dark col-span-9 py-2 px-4 h-10 shadow-lg' 
                   onChange={handleChange}>
             </input>
