@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Table from './Table';
 import { ResetContext } from './Main';
-import { occurance_json } from '../data/data';
+import { occurance_data } from '../data/data';
 import { getConvertedData } from '../utils/getConvertedData'
 
 function Submitted({ submittedData }) {
@@ -20,7 +20,7 @@ function Submitted({ submittedData }) {
       <div className='grid text-center col-span-1'>
         <button onClick={handleToogle} className='py-7 px-12 hover:bg-reset-red shadow-lg'>Reset</button>
         <div className='grid grid-row shadow-xl'>
-          {occurance_json.map(({occurance}) => {
+          {occurance_data.map(({occurance}) => {
             return (
               <button key={occurance} onClick={(value) => convert(value.target.innerText.toLowerCase())} 
                   value={occurance} 

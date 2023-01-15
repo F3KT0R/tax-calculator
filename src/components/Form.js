@@ -1,20 +1,19 @@
 import React, { useState, useContext } from 'react';
 import dollar_logo from '../assets/images/dollar_logo.svg';
 import { ResetContext } from './Main';
-import { occurance_json, salary_type } from '../data/data';
+import { occurance_data, salary_type } from '../data/data';
 
-function Form({ sendToParent }) {
+function Form({ sendToParent, callbackFromMain }) {
   const [newOccurance, setNewOccurance] = useState('weekly');
   const [incomeType, setIncomeType] = useState('gross');
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState();
   const { handleToogle } = useContext(ResetContext);
 
   const handleSubmit = () => {
-   if(value === 0) {
-      alert('Your income cannot be $0!\nPlease add a valid amount.');
-    } else if(isNaN(value)) {
-      alert('The value you have entered is not a number.\nPlease enter a valid number.');
+    if(isNaN(value)) {
+      callbackFromMain(true);
     } else {
+      callbackFromMain(false);
       calculate();
       handleToogle();
     }
@@ -30,16 +29,16 @@ function Form({ sendToParent }) {
           type: incomeType,
           occurance: newOccurance,
           gross_income: value,
-          net_income: value - (value * gross_multiplier),
-          tax: value * gross_multiplier
+          net_income: Math.round(((value - (value * gross_multiplier)) + Number.EPSILON) * 100) / 100,
+          tax: Math.round(((value * gross_multiplier) + Number.EPSILON) * 100) / 100
         })
     } else {
       sendToParent({
         type: incomeType,
         occurance: newOccurance,
-        gross_income: value / net_divider,
+        gross_income: Math.round(((value / net_divider) + Number.EPSILON) * 100) / 100,
         net_income: value,
-        tax: value / net_tax_divider
+        tax: Math.round(((value / net_tax_divider) + Number.EPSILON) * 100) / 100
       })
     }
   }
@@ -49,11 +48,11 @@ function Form({ sendToParent }) {
   }
 
   return (
-    <div className='grid grid-cols-3'>
+    <div className='grid grid-cols-3 z-0'>
       <div className='flex flex-col text-center'>
         <button onClick={handleSubmit} disabled={value !== 0 ? false : true} className='py-7 px-12 hover:bg-classy-green shadow-lg'>Submit</button>
         <div className='grid grid-row shadow-xl'>
-            {occurance_json.map(({occurance}) => {
+            {occurance_data.map(({occurance}) => {
               return (
                 <button key={occurance} onClick={(value) => setNewOccurance(value.target.innerText.toLowerCase())} 
                     value={occurance} 
@@ -74,7 +73,8 @@ function Form({ sendToParent }) {
             <img src={dollar_logo} className='h-10 p-2 invert' />
             <input type="text" 
                   name="value" 
-                  placeholder='10,000' 
+                  placeholder='10,000'
+                  autoComplete='off'
                   className='text-classy-dark col-span-9 py-2 px-4 h-10 shadow-lg' 
                   onChange={handleChange}>
             </input>

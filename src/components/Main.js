@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react'
+import React, { useState, createContext, useEffect } from 'react'
 import Form from './Form';
 import Submitted from './Submitted';
 
@@ -6,7 +6,7 @@ export const ResetContext = createContext({
     handleToogle: null
   });
 
-function Main() {
+function Main({ callbackFromApp }) {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [submittedData, setSubmittedData] = useState({
         type: '',
@@ -15,14 +15,19 @@ function Main() {
         net_income: 0,
         tax: 0
     });
+    const [alert, setAlert] = useState();
 
+    useEffect(() => {
+        callbackFromApp(alert);
+    }, [alert])
+    
     const handleToogle = () => {
-        setIsSubmitted((previous) => !previous )
+        setIsSubmitted((previous) => !previous );
     }
     
     return (
         <ResetContext.Provider value={{handleToogle}}>
-            {isSubmitted ? <Submitted submittedData={submittedData} /> : <Form sendToParent={setSubmittedData} />}
+            {isSubmitted ? <Submitted submittedData={submittedData} /> : <Form sendToParent={setSubmittedData} callbackFromMain={setAlert} />}
         </ResetContext.Provider>
     )
 }

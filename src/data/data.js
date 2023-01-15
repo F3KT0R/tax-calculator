@@ -1,4 +1,4 @@
-export const occurance_json = [
+export const occurance_data = [
     {
         "occurance": "weekly"
     },
